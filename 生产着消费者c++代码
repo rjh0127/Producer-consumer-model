@@ -83,3 +83,29 @@ void* thr_consumer (void *arg)
 void* thr_productor(void *arg)
 {
     
+int main (int argc, char *argv[])
+{
+    pthread_t ctid[4], ptid[4];
+    BlockQueue q;
+    int ret;
+ 
+    for(int i = 0; i < 4; i++) {
+    ret = pthread_create(&ctid[i], NULL, thr_consumer, (void*)&q);
+    if (ret != 0) {
+        std::cout<<"pthread create error\n";
+    }
+    }
+    for(int i = 0; i < 4; i++) {
+    ret = pthread_create(&ptid[i], NULL, thr_productor, (void*)&q);
+    if (ret != 0) {
+        std::cout<<"pthread create error\n";
+    }
+    }
+    for(int i = 0; i < 4; i++) {
+    pthread_join(ctid[i], NULL);
+    }
+    for(int i = 0; i < 4; i++) {
+    pthread_join(ptid[i], NULL);
+    }
+    return 0;
+}
